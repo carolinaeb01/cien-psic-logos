@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Psicólogos dijieron</title>
+
+    <style>
+        body {
+            margin: 0; /* Quita bordes blancos */
+        }
+
+        .imagen-fondo {
+            width: 100vw;      /* 100% del ancho de pantalla */
+            height: 100vh;     /* 100% del alto de pantalla */
+            object-fit: cover; /* Ajusta sin deformar */
+            display: block;    /* Quita espacio extra */
+        }
+
+        audio {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10; /* Para que quede encima */
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio src="cancion.mp3" controls></audio>
+
+    <a href="cienpsicologos.html">
+        <img src="psicologos.png" class="imagen-fondo" alt="">
+    </a>
+
+</body>
+</html>

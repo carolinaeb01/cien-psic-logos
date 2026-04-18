@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>100 Psicólogos Dijeron</title>
+
+<style>
+body {
+    font-family: Impact;
+    background: linear-gradient(to right, #0404e2);
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    letter-spacing: 5px;
+    font-weight: 100;
+}
+
+h2 {
+    font-weight: 100;
+}
+
+#tablero {
+    width: 60%;
+    margin: 20px auto;
+}
+
+
+.caja-puntos {
+    background: linear-gradient(to bottom, #102c6b, #081638);
+    color: yellow;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 22px;
+    border: 2px solid #1e3a8a;
+    min-width: 50px;
+    text-align: center;
+}
+
+
+.respuesta {
+    background: #004ffb;
+    border: 3px solid #0997ff;
+    margin: 10px;
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.oculta {
+    background: #004ffb;
+    border: 3px solid #004ffb;
+}
+
+#puntos {
+    font-size: 25px;
+    margin-top: 20px;
+}
+
+#error {
+    font-size: 40px;
+    color: red;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>100 Psicólogos Dijeron</h1> 
+<h2>Nombre algo que haces antes de </h2> 
+
+<div id="tablero"></div>
+
+<div id="puntos">Puntos: 0</div>
+<div id="error"></div>
+
+<button onclick="agregarError()">❌ Error</button>
+
+<script>
+
+const respuestas = [
+    { texto: "Cepillarse los dientes", puntos: 30 },
+    { texto: "Revisar el celular", puntos: 25 },
+    { texto: "Ponerse pijama", puntos: 20 },
+    { texto: "Ver televisión", puntos: 15 },
+    { texto: "Orar", puntos: 10 }
+];
+
+let puntosTotales = 0;
+let errores = 0;
+
+const tablero = document.getElementById("tablero");
+
+respuestas.forEach((respuesta, index) => {
+    const div = document.createElement("div");
+    div.classList.add("respuesta", "oculta");
+
+    
+    div.innerHTML = `<span>${index + 1}</span> <span>???</span>`;
+
+    div.onclick = function() {
+        if (div.classList.contains("oculta")) {
+            div.classList.remove("oculta");
+
+            
+            div.innerHTML = `
+                <span>${respuesta.texto}</span>
+                <span class="caja-puntos">${respuesta.puntos}</span>
+            `;
+
+            puntosTotales += respuesta.puntos;
+            document.getElementById("puntos").innerText = "Puntos: " + puntosTotales;
+        }
+    };
+
+    tablero.appendChild(div);
+});
+
+function agregarError() {
+    errores++;
+    document.getElementById("error").innerText = "❌".repeat(errores);
+}
+
+</script>
+<a href="siguiente.html">Siguiente</a>
+</body>
+</html>

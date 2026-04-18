@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>100 Psicólogos Dijieron</title>
+
+<style>
+body {
+    font-family: Impact;
+    background: linear-gradient(to right, #0404e2);
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 20px;
+    letter-spacing: 5px;
+    font-weight: 100;
+}
+
+h2 {
+    font-weight: 100;
+}
+
+#tablero {
+    width: 60%;
+    margin: 20px auto;
+}
+
+.caja-puntos {
+    background: linear-gradient(to bottom, #102c6b, #081638);
+    color: yellow;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 22px;
+    border: 2px solid #1e3a8a;
+    min-width: 50px;
+    text-align: center;
+}
+
+.respuesta {
+    background: #004ffb;
+    border: 3px solid #0997ff;
+    margin: 10px;
+    padding: 15px;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ffffff;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+
+.respuesta:not(.oculta) {
+    transform: scale(1.05);
+    background: #0a2fff;
+}
+
+.oculta {
+    background: #004ffb;
+    border: 3px solid #004ffb;
+}
+
+#puntos {
+    font-size: 25px;
+    margin-top: 20px;
+}
+
+#error {
+    font-size: 40px;
+    color: red;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 18px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+/* 🔵 Botón siguiente estilo pro */
+.boton-siguiente {
+    display: inline-block;
+    padding: 12px 22px;
+    font-size: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+
+    background-color: #004ffb;
+    color: white;
+    text-decoration: none;
+    border: 2px solid #0997ff;
+    border-radius: 8px;
+
+    transition: 0.3s;
+}
+
+.boton-siguiente:hover {
+    background-color: #0a2fff;
+    transform: scale(1.05);
+}
+
+.boton-siguiente:active {
+    transform: scale(0.95);
+}
+</style>
+</head>
+
+<body>
+<h1>100 Psicólogos Dijieron</h1> 
+<h2>¿Cómo se denomina actualmente a los menores infractores en México?</h2>
+
+<div id="tablero"></div>
+
+<div id="puntos">Puntos: 0</div>
+<div id="error"></div>
+
+<button onclick="agregarError()">❌ Error</button>
+<button onclick="reiniciarJuego()">🔄 Reiniciar</button>
+
+<!-- 🔵 BOTÓN SIGUIENTE -->
+<br>
+<a href="pregunta2.html" class="boton-siguiente">➡️ Siguiente</a>
+
+<!-- 🔊 AUDIOS -->
+<audio id="correcto" src="correcto.mp3"></audio>
+<audio id="incorrecto" src="incorrecto.mp3"></audio>
+<audio id="risa" src="risa.mp3"></audio>
+<audio id="triunfo" src="triunfo.mp3"></audio>
+<audio id="derrota" src="derrota.mp3"></audio>
+
+<script>
+
+const respuestas = [
+    { texto: "Persona adolescente en conflicto con la ley penal", puntos: 50 },
+    { texto: "Adolescente en conflicto con la ley", puntos: 20 },
+    { texto: "Menor en conflicto con la ley", puntos: 15 },
+    { texto: "Adolescente infractor", puntos: 10 },
+    { texto: "Joven infractor", puntos: 5 }
+];
+
+let puntosTotales = 0;
+let errores = 0;
+let respuestasReveladas = 0;
+
+const tablero = document.getElementById("tablero");
+
+function cargarTablero() {
+    tablero.innerHTML = "";
+
+    respuestas.forEach((respuesta, index) => {
+        const div = document.createElement("div");
+        div.classList.add("respuesta", "oculta");
+
+        div.innerHTML = `<span>${index + 1}</span> <span>???</span>`;
+
+        div.onclick = function() {
+            if (div.classList.contains("oculta")) {
+                div.classList.remove("oculta");
+
+                div.innerHTML = `
+                    <span>${respuesta.texto}</span>
+                    <span class="caja-puntos">${respuesta.puntos}</span>
+                `;
+
+                puntosTotales += respuesta.puntos;
+                document.getElementById("puntos").innerText = "Puntos: " + puntosTotales;
+
+                if (index === 0) {
+                    const triunfo = document.getElementById("triunfo");
+                    triunfo.currentTime = 0;
+                    triunfo.play();
+                } else {
+                    const sonidoCorrecto = document.getElementById("correcto");
+                    sonidoCorrecto.currentTime = 0;
+                    sonidoCorrecto.play();
+                }
+
+                respuestasReveladas++;
+
+                div.style.cursor = "default";
+                div.onclick = null;
+            }
+        };
+
+        tablero.appendChild(div);
+    });
+}
+
+function agregarError() {
+    if (errores < 3) {
+        errores++;
+        document.getElementById("error").innerText = "❌".repeat(errores);
+
+        const incorrecto = document.getElementById("incorrecto");
+        const derrota = document.getElementById("derrota");
+        const risa = document.getElementById("risa");
+
+        incorrecto.currentTime = 0;
+        incorrecto.play();
+
+        if (errores === 3) {
+            setTimeout(() => {
+                derrota.currentTime = 0;
+                derrota.play();
+            }, 300);
+
+            setTimeout(() => {
+                risa.currentTime = 0;
+                risa.play();
+            }, 800);
+        }
+    }
+}
+
+function reiniciarJuego() {
+    puntosTotales = 0;
+    errores = 0;
+    respuestasReveladas = 0;
+
+    document.getElementById("puntos").innerText = "Puntos: 0";
+    document.getElementById("error").innerText = "";
+
+    document.querySelectorAll("audio").forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+
+    cargarTablero();
+}
+
+cargarTablero();
+
+</script>
+
+</body>
+</html>
